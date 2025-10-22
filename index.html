@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FamilySafe - Live Location Tracker</title>
+    <title>FamilySafe - Mobile Location Tracker</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * {
@@ -17,47 +17,51 @@
             background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
             color: #333;
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             overflow: hidden;
+            height: calc(100vh - 20px);
+            display: flex;
+            flex-direction: column;
         }
 
         header {
             background: #2c3e50;
             color: white;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             border-bottom: 5px solid #3498db;
+            flex-shrink: 0;
         }
 
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
         }
 
         .tagline {
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             opacity: 0.9;
         }
 
         .main-content {
             display: flex;
-            flex-wrap: wrap;
-            min-height: 600px;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
         }
 
         .map-container {
             flex: 1;
-            min-width: 300px;
-            height: 500px;
-            border-right: 1px solid #eee;
+            min-height: 40vh;
+            border-bottom: 1px solid #eee;
         }
 
         #map {
@@ -67,37 +71,38 @@
         }
 
         .sidebar {
-            flex: 0 0 350px;
-            padding: 20px;
+            flex: 0 0 auto;
+            padding: 15px;
             background: #f8f9fa;
-            display: flex;
-            flex-direction: column;
+            overflow-y: auto;
+            max-height: 50vh;
         }
 
         .section {
-            margin-bottom: 25px;
-            padding: 15px;
+            margin-bottom: 15px;
+            padding: 12px;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         h2 {
             color: #2c3e50;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
             border-bottom: 2px solid #3498db;
+            font-size: 1.2rem;
         }
 
         .family-members {
-            max-height: 200px;
+            max-height: 120px;
             overflow-y: auto;
         }
 
         .member {
             display: flex;
             align-items: center;
-            padding: 10px;
+            padding: 8px;
             border-bottom: 1px solid #eee;
             transition: background 0.3s;
         }
@@ -107,8 +112,8 @@
         }
 
         .member-avatar {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             background: #3498db;
             color: white;
@@ -117,6 +122,7 @@
             justify-content: center;
             font-weight: bold;
             margin-right: 10px;
+            font-size: 0.9rem;
         }
 
         .member-info {
@@ -125,10 +131,11 @@
 
         .member-name {
             font-weight: 600;
+            font-size: 0.95rem;
         }
 
         .member-status {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #7f8c8d;
         }
 
@@ -143,11 +150,11 @@
         .controls {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         button {
-            padding: 12px 15px;
+            padding: 12px 10px;
             border: none;
             border-radius: 8px;
             font-weight: 600;
@@ -156,6 +163,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 0.9rem;
         }
 
         .btn-primary {
@@ -165,7 +173,6 @@
 
         .btn-primary:hover {
             background: #2980b9;
-            transform: translateY(-2px);
         }
 
         .btn-success {
@@ -175,7 +182,6 @@
 
         .btn-success:hover {
             background: #219653;
-            transform: translateY(-2px);
         }
 
         .btn-danger {
@@ -185,7 +191,6 @@
 
         .btn-danger:hover {
             background: #c0392b;
-            transform: translateY(-2px);
         }
 
         .consent-toggle {
@@ -243,64 +248,119 @@
         .privacy-notice {
             background: #fff8e1;
             border-left: 4px solid #ffc107;
-            padding: 10px;
-            font-size: 0.9rem;
-            margin-top: 15px;
+            padding: 8px;
+            font-size: 0.8rem;
+            margin-top: 10px;
         }
 
         footer {
             text-align: center;
-            padding: 15px;
+            padding: 10px;
             background: #2c3e50;
             color: white;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            flex-shrink: 0;
         }
 
         .location-status {
-            padding: 10px;
+            padding: 8px;
             background: #e8f4fd;
             border-radius: 5px;
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
-
-        .location-info {
-            margin-top: 10px;
-            padding: 8px;
-            background: #f8f9fa;
-            border-radius: 5px;
+            margin-top: 8px;
             font-size: 0.85rem;
         }
 
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column;
-            }
-            
-            .map-container {
-                height: 400px;
-                border-right: none;
-                border-bottom: 1px solid #eee;
-            }
-            
-            .sidebar {
-                flex: 1;
-            }
+        .location-info {
+            margin-top: 8px;
+            padding: 6px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 0.8rem;
         }
 
         .loading {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,.3);
             border-radius: 50%;
             border-top-color: #fff;
             animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
+            margin-right: 8px;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* Landscape orientation adjustments */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .container {
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            .main-content {
+                flex-direction: row;
+            }
+            
+            .map-container {
+                flex: 1;
+                min-height: auto;
+                border-bottom: none;
+                border-right: 1px solid #eee;
+            }
+            
+            .sidebar {
+                flex: 0 0 300px;
+                max-height: none;
+            }
+        }
+
+        /* Tablet and larger phone adjustments */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 800px;
+            }
+            
+            .main-content {
+                flex-direction: row;
+            }
+            
+            .map-container {
+                flex: 1;
+                min-height: auto;
+                border-bottom: none;
+                border-right: 1px solid #eee;
+            }
+            
+            .sidebar {
+                flex: 0 0 350px;
+                max-height: none;
+            }
+        }
+
+        /* Very small phones */
+        @media (max-width: 360px) {
+            header {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
+            
+            .tagline {
+                font-size: 0.8rem;
+            }
+            
+            .sidebar {
+                padding: 10px;
+            }
+            
+            .section {
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -308,7 +368,7 @@
     <div class="container">
         <header>
             <h1>FamilySafe Tracker</h1>
-            <p class="tagline">Stay connected with your loved ones - consensually and securely</p>
+            <p class="tagline">Stay connected with your loved ones</p>
         </header>
         
         <div class="main-content">
@@ -355,14 +415,14 @@
                         </label>
                     </div>
                     <div class="privacy-notice">
-                        <p>Your location is only shared with family members you approve. You can revoke consent at any time.</p>
+                        <p>Your location is only shared with approved family members.</p>
                     </div>
                 </div>
             </div>
         </div>
         
         <footer>
-            <p>FamilySafe Tracker &copy; 2023 | All location sharing is consensual | Maps by <a href="https://www.openstreetmap.org/copyright" style="color: #3498db;">OpenStreetMap</a></p>
+            <p>FamilySafe Tracker &copy; 2023 | Maps by OpenStreetMap</p>
         </footer>
     </div>
 
@@ -373,14 +433,14 @@
         
         // Add OpenStreetMap tiles with proper attribution
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            attribution: '© OpenStreetMap contributors',
             maxZoom: 18
         }).addTo(map);
         
         // Add a message for the user
-        const message = L.popup()
+        L.popup()
             .setLatLng([0, 0])
-            .setContent('<div style="text-align:center;"><b>FamilySafe Tracker</b><br>Click "Share My Location" to start tracking</div>')
+            .setContent('<div style="text-align:center;"><b>FamilySafe Tracker</b><br>Tap "Share My Location" to start</div>')
             .openOn(map);
         
         // Sample family members data
